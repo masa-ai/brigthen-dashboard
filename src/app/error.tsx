@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 
-import Button from '@/components/Button';
+import { BaseButton as Button } from '@/components/Button';
 
 export default function Error({
   error,
