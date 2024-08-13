@@ -22,10 +22,14 @@ const UserTable = () => {
     fetchData();
   }, []);
 
-  const handleStatusChange = (index: number, newStatus: boolean) => {
+  const handleStatusChange = async (index: number, newStatus: boolean) => {
     const updatedData = [...data];
     updatedData[index].is_verified = newStatus;
     setData(updatedData);
+
+    // Send is_verified and email to the server
+    // const { email, is_verified } = updatedData[index];
+    // await updateUserStatus(email, is_verified);
   };
 
   return (
@@ -52,11 +56,11 @@ const UserTable = () => {
                     <span
                       className={`px-2 py-1 rounded-full text-white ${
                         user.is_verified === true
-                          ? 'bg-red-200 text-red-800'
-                          : 'bg-green-200 text-green-800'
+                          ? 'bg-green-200 text-green-800'
+                          : 'bg-red-200 text-red-800'
                       }`}
                     >
-                      {user.is_verified === true ? 'Pending' : 'Selesai'}
+                      {user.is_verified === true ? 'Verified' : 'Pending'}
                     </span>
                     <select
                       className='absolute inset-0 opacity-0 cursor-pointer'
@@ -69,7 +73,7 @@ const UserTable = () => {
                       }
                     >
                       <option value='pending'>Pending</option>
-                      <option value='completed'>Selesai</option>
+                      <option value='completed'>Verified</option>
                     </select>
                   </div>
                 </td>
