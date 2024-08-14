@@ -1,4 +1,4 @@
-// import axios from 'axios';
+import axios from 'axios';
 
 // const dashboardApi = axios.create({
 //   baseURL: process.env.NEXT_PUBLIC_API_ENDPOINT_CORE,
@@ -8,22 +8,19 @@
 // });
 
 export const getUsersProfile = async () => {
-  // const response = await dashboardApi.get(
-  //   `/sentra_dashboard/all_purchases_brighten`
-  // );
-  const data = [
+  const response = await axios.get(
+    `${process.env.NEXT_PUBLIC_API_ENDPOINT_CORE}/sentra_dashboard/all_purchases_brighten`
+  );
+  return response.data;
+};
+
+export const updateUserStatus = async (email, is_verified) => {
+  const response = await axios.post(
+    `${process.env.NEXT_PUBLIC_API_ENDPOINT_CORE}/sentra_dashboard/set_user_email_verified_status`,
     {
-      email: 'haideraslam360@gmail.com',
-      is_verified: true,
-      created_at: '2024-07-22 07:37',
-      full_name: 'Haider Aslam',
-    },
-    {
-      email: 'haideraslam360@gmail.com',
-      is_verified: true,
-      created_at: '2024-07-22 07:37',
-      full_name: 'Haider Aslam',
-    },
-  ];
-  return data;
+      email: email,
+      is_verified: is_verified,
+    }
+  );
+  return response.data;
 };
