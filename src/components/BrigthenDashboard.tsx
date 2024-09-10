@@ -1,5 +1,6 @@
 'use client';
 
+import Cookies from 'js-cookie';
 import React, { useEffect, useState } from 'react';
 
 import { getUsersProfile } from '@/api/dashboardApi';
@@ -13,14 +14,19 @@ interface User {
 
 const UserTable = () => {
   const [data, setData] = useState<User[]>([]);
+  const [page, setPage] = useState(0);
+  const [totalRows, setTotalRows] = useState(0);
+  const token = Cookies.get('token');
+  const limit = 10; // Number of items per page
 
   useEffect(() => {
     const fetchData = async () => {
-      const dummyData = await getUsersProfile();
-      setData(dummyData);
+      const response = await getUsersProfile(token, limit, page * limit);
+      setData(response.users);
+      setTotalRows(response.total_rows);
     };
     fetchData();
-  }, []);
+  }, [token, page]);
 
   const handleStatusChange = async (index: number, newStatus: boolean) => {
     const updatedData = [...data];
@@ -31,6 +37,8 @@ const UserTable = () => {
     // const { email, is_verified } = updatedData[index];
     // await updateUserStatus(email, is_verified);
   };
+
+  const totalPages = Math.ceil(totalRows / limit);
 
   return (
     <div className='min-h-screen bg-gray-100'>
@@ -81,6 +89,19 @@ const UserTable = () => {
             ))}
           </tbody>
         </table>
+        <div className='flex justify-center mt-4'>
+          {Array.from({ length: totalPages }, (_, i) => (
+            <button
+              key={i}
+              className={`px-4 py-2 mx-1 ${
+                i === page ? 'bg-blue-500 text-white' : 'bg-gray-300'
+              }`}
+              onClick={() => setPage(i)}
+            >
+              {i + 1}
+            </button>
+          ))}
+        </div>
       </div>
     </div>
   );

@@ -19,3 +19,13 @@ export const BaseButton = styled(Button)(({ size }) => ({
     backgroundColor: 'rgba(19, 19, 22, 0.1)',
   },
 }));
+
+export const UnderlineButton = ({ ...props }) => {
+  return (
+    <BaseButton className='hover:bg-transparent' disableTouchRipple {...props}>
+      <span className='border-b border-primary-500 text-black'>
+        {props.children}
+      </span>
+    </BaseButton>
+  );
+};
