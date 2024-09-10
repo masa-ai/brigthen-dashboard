@@ -1,5 +1,6 @@
 'use client';
 
+import TablePagination from '@mui/material/TablePagination';
 import Cookies from 'js-cookie';
 import React, { useEffect, useState } from 'react';
 
@@ -16,8 +17,9 @@ const UserTable = () => {
   const [data, setData] = useState<User[]>([]);
   const [page, setPage] = useState(0);
   const [totalRows, setTotalRows] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10); // Add this line
   const token = Cookies.get('token');
-  const limit = 10; // Number of items per page
+  const limit = rowsPerPage; // Update this line
 
   useEffect(() => {
     const fetchData = async () => {
@@ -26,7 +28,7 @@ const UserTable = () => {
       setTotalRows(response.total_rows);
     };
     fetchData();
-  }, [token, page]);
+  }, [token, page, limit]);
 
   const handleStatusChange = async (index: number, newStatus: boolean) => {
     const updatedData = [...data];
@@ -38,7 +40,16 @@ const UserTable = () => {
     // await updateUserStatus(email, is_verified);
   };
 
-  const totalPages = Math.ceil(totalRows / limit);
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setPage(0);
+    setRowsPerPage(parseInt(event.target.value, 10));
+  };
 
   return (
     <div className='min-h-screen bg-gray-100'>
@@ -89,19 +100,14 @@ const UserTable = () => {
             ))}
           </tbody>
         </table>
-        <div className='flex justify-center mt-4'>
-          {Array.from({ length: totalPages }, (_, i) => (
-            <button
-              key={i}
-              className={`px-4 py-2 mx-1 ${
-                i === page ? 'bg-blue-500 text-white' : 'bg-gray-300'
-              }`}
-              onClick={() => setPage(i)}
-            >
-              {i + 1}
-            </button>
-          ))}
-        </div>
+        <TablePagination
+          component='div'
+          count={totalRows}
+          page={page}
+          onPageChange={handleChangePage}
+          rowsPerPage={limit}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
       </div>
     </div>
   );

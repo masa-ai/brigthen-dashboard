@@ -25,7 +25,7 @@ export default function Navbar() {
           }}
         >
           <Link
-            href='/'
+            href='/dashboard'
             style={{
               paddingLeft: '40px',
               display: 'flex',
